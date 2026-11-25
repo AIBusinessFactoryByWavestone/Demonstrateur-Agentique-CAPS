@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Démonstrateur agentique – Wavestone × CAPS</title>
+<style>
+:root{--v:#4B2BD1;--d:#2A1B6E;--l:#EEEAFB;--g:#6B6B7B;--ok:#1E9E6A;--warn:#E08A00;--ko:#D4372C;--bg:#F5F4FB}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:#1F1F2E;font-size:14px;line-height:1.4}
+header{background:linear-gradient(120deg,var(--d),var(--v));color:#fff;padding:18px 32px 0}
+.k{font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+h1{font-size:24px;margin:4px 0 14px}
+.tabs{display:flex;gap:6px}
+.tabs button{border:0;background:rgba(255,255,255,.15);color:#fff;padding:12px 22px;border-radius:12px 12px 0 0;font-size:15px;font-weight:bold;cursor:pointer;font-family:inherit}
+.tabs button.on{background:var(--bg);color:var(--v)}
+main{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:20px 32px;max-width:1440px;margin:0 auto;align-items:start}
+.p{background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(42,27,110,.08);padding:22px}
+.sticky{position:sticky;top:12px}
+.ph{font-size:12px;font-weight:bold;letter-spacing:.08em;text-transform:uppercase;color:var(--v);margin-bottom:4px}
+h2{font-size:19px;color:var(--d);margin-bottom:12px}
+.say{background:var(--d);color:#fff;border-radius:12px;padding:13px 18px;font-size:16px;margin-bottom:14px}
+.say small{display:block;font-size:11px;color:#CFC4FF;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.ctl{margin-bottom:11px}
+.ctl label{display:block;font-size:11.5px;font-weight:bold;color:var(--d);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.seg{display:flex;gap:4px;background:var(--l);border-radius:10px;padding:4px}
+.seg button{flex:1;border:0;background:transparent;padding:9px 6px;border-radius:8px;font-size:13px;cursor:pointer;color:var(--d);font-family:inherit}
+.seg button.on{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.12);font-weight:bold;color:var(--v)}
+.hint{font-size:12.5px;color:var(--g);margin-top:5px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.run{width:100%;background:var(--v);color:#fff;border:0;border-radius:10px;padding:13px;font-size:15px;font-weight:bold;cursor:pointer;margin:4px 0 16px;font-family:inherit}
+.run:disabled{opacity:.5}
+.step{display:flex;gap:10px;margin-bottom:10px;opacity:0;transform:translateY(6px);transition:.35s}
+.step.show{opacity:1;transform:none}
+.sn{flex:0 0 24px;height:24px;border-radius:50%;background:var(--d);color:#fff;font-size:12px;font-weight:bold;display:flex;align-items:center;justify-content:center;margin-top:6px}
+.av{flex:0 0 36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--l)}
+.bub{flex:1;background:var(--bg);border-radius:10px;padding:9px 12px;font-size:13.5px}
+.bub small{display:block;font-size:10.5px;font-weight:bold;text-transform:uppercase;color:var(--g);margin-bottom:1px}
+.bub.ok{background:#EAF7F1}.bub.warn{background:#FFF5E5}.bub.ko{background:#FDECEA}
+.chips{margin-top:6px;display:flex;gap:5px;flex-wrap:wrap}
+.chip{font-size:11px;font-weight:bold;background:var(--v);color:#fff;border-radius:10px;padding:3px 9px;cursor:default}
+.chip::before{content:"⚙ "}
+.nochip{font-size:11px;color:var(--g);margin-top:5px;font-style:italic}
+.res{border-radius:12px;padding:14px 16px;font-size:14px;display:none;margin-top:6px}
+.res b{display:block;font-size:15px;margin-bottom:3px}
+.res.ok{display:block;background:#EAF7F1;color:#0E5C3D}.res.warn{display:block;background:#FFF5E5;color:#7A4A00}.res.ko{display:block;background:#FDECEA;color:#8E2219}
+.empty{color:var(--g);text-align:center;padding:26px 0;font-size:13px}
+/* right */
+.intro{font-size:13px;color:#444;margin:-4px 0 12px}
+.score{display:flex;gap:14px;align-items:center;background:var(--bg);border-radius:12px;padding:11px 14px;margin-bottom:12px}
+.score .big{font-size:13px;min-width:150px}.score .big b{font-size:18px;display:block}
+.meter{flex:1}.meter .bar{height:10px;background:var(--l);border-radius:5px;overflow:hidden}
+.meter .bar i{display:block;height:100%;border-radius:5px;transition:.5s}
+.meter p{font-size:12px;color:#444;margin-top:6px}
+.tag{font-size:10.5px;font-weight:bold;text-transform:uppercase;padding:4px 9px;border-radius:10px}
+.leg{display:flex;gap:12px;font-size:11px;color:var(--g);margin-bottom:10px;flex-wrap:wrap;align-items:center}
+.blk{border:1.5px solid #E2DDF3;border-radius:12px;padding:11px 14px;margin-bottom:8px;transition:.35s;position:relative;background:#fff}
+.blk .top{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.blk b{color:var(--d);font-size:14px}
+.blk .r{display:flex;gap:8px;align-items:center}
+.blk ul{margin:7px 0 0 18px;font-size:12.5px;color:#333}
+.blk ul li{margin-bottom:2px}
+.blk .st{font-size:11px;font-weight:bold;margin-top:6px}
+.blk.off{opacity:.32}.blk.off ul{display:none}
+.blk.req{border-style:dashed}
+.blk.req .st{color:var(--g)}
+.blk.act{border-color:var(--v);border-style:solid;box-shadow:0 0 0 4px rgba(75,43,209,.2);transform:scale(1.015);background:#FBFAFF}
+.blk.used{border-color:var(--v);border-style:solid}
+.blk.used .st{color:var(--v)}
+.blk.idle{opacity:.55}
+.blk.idle .st{color:var(--g)}
+.own{font-size:10px;font-weight:bold;border-radius:7px;padding:3px 7px;white-space:nowrap}
+.own.caps{background:var(--v);color:#fff}.own.contrib{border:1px solid var(--v);color:var(--v)}.own.out{background:#E3E3EA;color:#555}
+.dots{font-size:12px;letter-spacing:1px;white-space:nowrap}.dots .f{color:var(--v)}.dots .e{color:#D8D3EC}
+.off .dots{visibility:hidden}
+.key{margin-top:10px;background:#FFF8EC;border-left:4px solid var(--warn);border-radius:8px;padding:10px 14px;font-size:13px;color:#5A3A00}
+footer{max-width:1440px;margin:0 auto;padding:0 32px 22px;font-size:11px;color:var(--g)}
+@media(max-width:1000px){main{grid-template-columns:1fr}.sticky{position:static}}
+</style>
+</head>
+<body>
+<header>
+ <div class="k">Wavestone × CAPS · Atelier IA agentique · Démonstrateur illustratif</div>
+ <h1>Ce que l’agent fait, et ce que la chaîne de paiement doit avoir pour le permettre</h1>
+ <div class="tabs"><button data-u="pay" class="on">💳 Paiement par un agent</button><button data-u="opp">🔒 Opposition par le client</button></div>
+</header>
+
+<main>
+ <section class="p">
+  <div class="ph">1 · Ce que je souhaite créer</div>
+  <h2 id="ttl"></h2>
+  <div class="say"><small id="sayW"></small><span id="sayT"></span></div>
+  <div class="ctl"><label>Ce que j’autorise l’agent à faire</label><div class="seg" id="lvl"></div><div class="hint" id="lvlH"></div></div>
+  <div class="two">
+   <div class="ctl"><label>Le client au moment de l’opération</label><div class="seg" id="pres"><button data-v="p">Présent</button><button data-v="a">Absent</button></div></div>
+   <div class="ctl"><label id="var2L"></label><div class="seg" id="var2"></div></div>
+  </div>
+  <button class="run" id="run">▶ Dérouler le processus</button>
+  <div id="tl"></div>
+  <div class="res" id="res"></div>
+ </section>
+
+ <section class="p sticky">
+  <div class="ph">2 · Ce qu’il faut mettre en place</div>
+  <h2>Les briques sollicitées, étape par étape</h2>
+  <p class="intro">Chaque étape du processus active une ou plusieurs briques. Pour chacune : <b>ce qu’il faut avoir</b>, qui la porte et sa complexité de mise en œuvre.</p>
+  <div class="score"><div class="big">Complexité à ce niveau<b id="cplx"></b></div><div class="meter"><div class="bar"><i id="bar"></i></div><p id="hz"></p></div></div>
+  <div class="leg"><span class="own caps">CAPS</span>pilote <span class="own contrib">CAPS ·</span>contributeur <span class="own out">Hors</span>hors CAPS <span class="dots"><span class="f">●●●</span><span class="e">●●</span></span>complexité</div>
+  <div id="blocks"></div>
+  <div class="key" id="key"></div>
+ </section>
+</main>
+<footer>Démonstrateur illustratif Wavestone – IA Business Factory. Agent, client et montants fictifs. Porteurs, complexités et horizons indicatifs, à challenger avec CAPS et les entités du Groupe pendant l’atelier.</footer>
+
+<script>
+/* ---------- BRIQUES ---------- */
+const BL={
+pay:[
+ {id:'mandat',t:'Mandat du client',o:'contrib',l:'Banque · CAPS',need:s=>s.l==3,c:()=>4,
+  have:['Un écran où le client fixe plafond, catégorie et durée','Un mandat stocké et lisible par la chaîne de paiement','Une révocation en un geste']},
+ {id:'sca',t:'Authentification du client',o:'contrib',l:'CAPS · Banque',need:s=>s.l>=2,c:s=>s.l==3&&s.p=='a'?5:2,
+  have:['Authentification forte au moment de la validation ou du mandat','Un cadre clair pour le paiement client absent (à instruire juridiquement)']},
+ {id:'kya',t:'Identification de l’agent (KYA)',o:'caps',l:'CAPS',need:s=>s.l>=2,c:()=>4,
+  have:['Un référentiel des agents de confiance','La vérification de la signature de l’agent','Le rattachement agent ↔ client, et sa révocation']},
+ {id:'token',t:'Moyen de paiement dédié à l’agent',o:'caps',l:'CAPS',need:s=>s.l>=2,c:()=>3,
+  have:['Un token limité à un agent, un marchand, un montant et une durée','La carte réelle jamais transmise à l’agent']},
+ {id:'fraud',t:'Scoring fraude « agent »',o:'caps',l:'CAPS',need:s=>s.l>=2,c:()=>3,
+  have:['Un marqueur « initié par un agent » sur la transaction','Des règles et modèles adaptés aux comportements d’agents']},
+ {id:'proof',t:'Preuve d’intention',o:'caps',l:'CAPS',need:s=>s.l==3,c:s=>s.p=='a'?5:3,
+  have:['Un enregistrement horodaté : demande + mandat + agent + paiement','Une preuve exploitable en cas de litige']}
+],
+opp:[
+ {id:'conv',t:'Agent conversationnel de la banque',o:'out',l:'Banque',need:()=>true,c:()=>2,
+  have:['Comprendre la demande du client','Un client déjà authentifié dans son espace']},
+ {id:'vision',t:'Vision des cartes et opérations',o:'caps',l:'CAPS',need:s=>s.v=='client',c:()=>2,
+  have:['Une API de lecture des cartes et dernières opérations','Des droits d’accès limités pour l’agent (lecture seule)']},
+ {id:'alert',t:'Signal fraude transmis à l’agent',o:'caps',l:'CAPS',need:s=>s.v=='fraude',c:s=>s.l==3?4:2,
+  have:['Une alerte fraude transmise en temps réel','Des règles indiquant quand l’agent peut agir seul']},
+ {id:'block',t:'Blocage temporaire et opposition',o:'caps',l:'CAPS',need:s=>s.l>=2,c:()=>3,
+  have:['Des services de blocage et d’opposition exposés à l’agent','Des droits distincts : blocage réversible ≠ opposition définitive']},
+ {id:'reissue',t:'Réémission et mise à jour des wallets',o:'contrib',l:'CAPS · AVEM',need:s=>s.l>=2,c:()=>3,
+  have:['La commande automatique d’une nouvelle carte','Le report dans les wallets et chez les marchands']},
+ {id:'trace',t:'Traçabilité et réversibilité',o:'caps',l:'CAPS',need:s=>s.l==3,c:()=>2,
+  have:['Un journal des décisions prises par l’agent','Un déblocage possible par le client']}
+]};
+const NAME={};Object.values(BL).flat().forEach(b=>NAME[b.id]=b.t);
+
+/* ---------- CAS D’USAGE ---------- */
+const U={
+pay:{ttl:'Un agent IA paie un achat pour son client',sayW:'Le client dit à son agent',sayT:'« Réserve-moi un Paris → Lyon vendredi avant 9 h, moins de 150 €. »',
+ lvls:[['1','Recommander','L’agent compare et propose. Le client paie lui-même.'],['2','Préparer','L’agent prépare le paiement, le client valide en un geste.'],['3','Payer sous mandat','L’agent paie seul, dans un plafond de 150 € fixé à l’avance.']],
+ var2L:'Offre trouvée',var2:[['in','89 € (dans le mandat)'],['out','189 € (hors mandat)']]},
+opp:{ttl:'Un client fait opposer sa carte avec l’aide d’un agent',sayW:'Le client écrit à l’agent de sa banque',sayT:'« Je crois que j’ai perdu mon portefeuille. »',
+ lvls:[['1','Guider','L’agent explique la marche à suivre. Le client agit lui-même.'],['2','Préparer','L’agent prépare l’opposition, le client confirme.'],['3','Agir seul','L’agent bloque la carte de lui-même en cas de risque.']],
+ var2L:'Déclencheur',var2:[['client','Le client signale'],['fraude','Alerte fraude détectée']]}
+};
+let u='pay',S={l:3,p:'p',v:'in'},busy=false;
+const $=i=>document.getElementById(i);
+const AV={c:['🧑','Client'],a:['🤖','Agent IA'],caps:['🛡️','Chaîne paiement CAPS'],b:['🏦','Banque']};
+
+/* étape = [acteur, texte, style, [briques]] */
+function scen(){
+ const s=S,L=[];let r;
+ if(u=='pay'){
+  const amt=s.v=='in'?'89 €':'189 €';
+  if(s.l==3)L.push(['c','<i>Au préalable</i>, le client a donné un mandat à son agent : 150 € max, transport, 30 jours, avec authentification forte.','',['mandat','sca']]);
+  L.push(['a','J’ai comparé 3 offres. Meilleure option : <b>'+amt+'</b>, départ 7 h 04.','',[]]);
+  if(s.l==1){
+   L.push(['a','Voici le lien. <b>Je ne paie pas</b> : c’est à vous de réserver.','',[]]);
+   if(s.p=='a'){L.push(['c','Le client n’est pas disponible : l’offre peut disparaître.','warn',[]]);r=['warn','Rien n’est payé tant que le client n’agit pas.','La chaîne de paiement ne change pas. Aucune brique nouvelle, mais une valeur limitée.'];}
+   else{L.push(['c','Le client paie lui-même, avec son authentification habituelle.','ok',[]]);r=['ok','Paiement classique, réalisé par le client.','Aucune brique nouvelle côté CAPS : idéal pour acculturer, peu de valeur ajoutée.'];}
+   return[L,r];}
+  L.push(['caps','L’agent se présente : signature vérifiée, agent de confiance, rattaché à ce client.','ok',['kya']]);
+  L.push(['caps','Token dédié émis pour cet agent et ce marchand. La carte n’est pas exposée.','ok',['token']]);
+  if(s.l==2){
+   if(s.p=='a'){L.push(['c','Demande de validation envoyée… sans réponse.','warn',['sca']]);r=['warn','En attente : rien ne part sans le client.','L’agent a tout préparé, mais sans validation l’opération expire.'];}
+   else{L.push(['c','« Valider '+amt+' ? » → validé par biométrie.','ok',['sca']]);L.push(['caps','Scoring fraude OK, paiement autorisé.','ok',['fraud']]);r=['ok','Préparé par l’agent, validé en un geste par le client.','Le niveau le plus accessible : l’humain garde la décision, mais il faut déjà reconnaître l’agent.'];}
+   return[L,r];}
+  if(s.v=='in'){
+   L.push(['caps','Mandat vérifié : '+amt+' ≤ 150 €, catégorie transport, mandat valide.','ok',['mandat']]);
+   L.push(['caps','Scoring fraude : agent connu, marchand connu, montant habituel. Paiement autorisé.','ok',['fraud']]);
+   L.push(['caps','Preuve enregistrée : demande du client + mandat + agent + paiement.','ok',['proof']]);
+   L.push(['b','« Votre agent a réservé votre Paris → Lyon pour 89 €. »','',[]]);
+   r=['ok',s.p=='a'?'Payé seul, client absent.':'Payé seul, client notifié.','Une expérience fluide en façade, six briques mobilisées en coulisses.'];}
+  else if(s.p=='p'){
+   L.push(['caps','Mandat vérifié : 189 € > 150 €. <b>L’agent s’arrête.</b>','warn',['mandat']]);
+   L.push(['c','Le client est sollicité : il s’authentifie pour accepter, ou refuse.','warn',['sca']]);
+   r=['warn','Hors mandat : l’humain reprend la main.','L’autonomie s’arrête exactement à la limite fixée par le client.'];}
+  else{
+   L.push(['caps','Mandat vérifié : 189 € > 150 €. Client injoignable : <b>paiement bloqué</b>.','ko',['mandat']]);
+   L.push(['b','Le client est notifié : « Offre hors budget non réservée. »','',[]]);
+   r=['ko','Client absent et hors mandat : rien ne part.','La limite clé : sans le client, l’agent ne dépasse jamais son mandat.'];}
+  return[L,r];
+ }
+ /* opposition */
+ if(s.v=='fraude'){
+  L.push(['caps','Alerte : 3 paiements inhabituels en 10 minutes sur la carte •••• 4821.','warn',['alert']]);
+  if(s.l<3){
+   L.push(['a','L’agent prévient le client et lui propose de bloquer sa carte.','',['conv']]);
+   if(s.p=='a'){L.push(['c','Le client ne répond pas : la carte reste active.','ko',[]]);r=['ko','Le risque court tant que le client n’a pas répondu.','Ici, trop peu d’autonomie coûte plus cher que trop d’autonomie.'];}
+   else if(s.l==1){L.push(['c','Le client bloque lui-même sa carte depuis son application.','ok',[]]);r=['ok','Bloquée par le client, alerté par l’agent.','Efficace si le client est joignable et réactif.'];}
+   else{L.push(['c','Le client confirme : « Bloquez-la ! »','ok',['conv']]);L.push(['caps','Carte mise en opposition, nouvelle carte commandée.','ok',['block','reissue']]);r=['ok','Bloquée après confirmation du client.','Efficace si le client est joignable rapidement.'];}
+   return[L,r];}
+  L.push(['a','Risque avéré : l’agent déclenche un <b>blocage temporaire</b> sans attendre le client.','ok',['block']]);
+  L.push(['caps','Décision de l’agent tracée, déblocage possible par le client.','ok',['trace']]);
+  if(s.p=='a'){L.push(['b','Notification : « Carte bloquée par précaution. Confirmez l’opposition ou débloquez-la. »','',['conv']]);
+   r=['ok','Carte protégée, même client absent.','Le blocage est réversible ; l’opposition définitive attend le client.'];}
+  else{L.push(['c','« Ce n’est pas moi » → opposition confirmée, nouvelle carte commandée.','ok',['conv','reissue']]);
+   r=['ok','Protégé en quelques secondes, opposition confirmée par le client.','Action protectrice, réversible et tracée : un candidat idéal pour une première expérimentation.'];}
+  return[L,r];}
+ L.push(['a','Je comprends : perte de portefeuille. Vous êtes déjà identifié dans votre espace.','',['conv']]);
+ L.push(['a','Je vois 2 cartes. Dernière opération : boulangerie, 8,40 €, ce matin.','',['vision']]);
+ if(s.p=='a'){
+  if(s.l==3){L.push(['a','Le client ne répond plus. Risque de perte : <b>blocage temporaire</b> immédiat.','ok',['block']]);L.push(['caps','Décision tracée, en attente de confirmation du client.','ok',['trace']]);
+   r=['ok','La carte est protégée, même sans réponse du client.','La décision définitive reste au client.'];}
+  else{L.push(['a','Le client ne répond plus : l’agent attend sa confirmation.','warn',[]]);r=['warn','La carte reste active tant que le client n’a pas répondu.','Le niveau d’autonomie choisi limite la protection.'];}
+  return[L,r];}
+ if(s.l==1){L.push(['a','Pour faire opposition : Espace client → Cartes → Opposition.','',['conv']]);L.push(['c','Le client fait lui-même l’opposition.','ok',[]]);
+  r=['ok','Opposition réalisée par le client, guidé par l’agent.','Peu de briques nouvelles, mais le client fait encore le travail.'];return[L,r];}
+ L.push(['a','Je propose : opposition de la Visa •••• 4821 + nouvelle carte à domicile. Je confirme ?','',['conv']]);
+ L.push(['c','« Oui ».','ok',[]]);
+ L.push(['caps','Opposition enregistrée.','ok',s.l==3?['block','trace']:['block']]);
+ L.push(['caps','Nouvelle carte commandée, wallets et marchands mis à jour.','ok',['reissue']]);
+ r=['ok','Tout le parcours traité en une seule conversation.','Une identification, un contexte partagé, un statut clair.'];
+ return[L,r];
+}
+
+/* ---------- RENDU ---------- */
+let used={};
+function segH(id,arr){$(id).innerHTML=arr.map(a=>`<button data-v="${a[0]}">${a[1]}</button>`).join('');}
+function bind(){[['lvl','l'],['pres','p'],['var2','v']].forEach(([id,k])=>$(id).querySelectorAll('button').forEach(b=>b.onclick=()=>{if(busy)return;S[k]=k=='l'?+b.dataset.v:b.dataset.v;used={};render();}));}
+function load(){const d=U[u];$('ttl').textContent=d.ttl;$('sayW').textContent=d.sayW;$('sayT').textContent=d.sayT;
+ segH('lvl',d.lvls);$('var2L').textContent=d.var2L;segH('var2',d.var2);S={l:3,p:'p',v:d.var2[0][0]};used={};bind();render();}
+function drawBlocks(active=[],done=false){
+ $('blocks').innerHTML=BL[u].map(b=>{
+  const n=b.need(S),c=n?b.c(S):0;
+  let cls='off',st='Non nécessaire à ce niveau d’autonomie';
+  if(n){cls='req';st='Requise à ce niveau – en attente du processus';
+   if(used[b.id]){cls='used';st='✓ Sollicitée à l’étape '+used[b.id].join(', ');}
+   else if(done){cls='idle';st='Requise, mais non sollicitée dans ce scénario';}
+   if(active.includes(b.id))cls='act';}
+  return `<div class="blk ${cls}" id="b-${b.id}"><div class="top"><b>${b.t}</b><div class="r"><span class="dots">${'<span class="f">●</span>'.repeat(c)}${'<span class="e">●</span>'.repeat(5-c)}</span><span class="own ${b.o}">${b.l}</span></div></div>
+  <ul>${b.have.map(h=>'<li>'+h+'</li>').join('')}</ul><div class="st">${st}</div></div>`}).join('');
+}
+function render(){
+ const d=U[u];
+ [['lvl','l'],['pres','p'],['var2','v']].forEach(([id,k])=>$(id).querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v==S[k])));
+ $('lvlH').textContent=d.lvls[S.l-1][2];
+ $('tl').innerHTML='<div class="empty">Lancez le processus : chaque étape allume à droite les briques qu’elle mobilise.</div>';$('res').className='res';
+ drawBlocks();
+ let sum=0,max=0;BL[u].forEach(b=>{max+=5;if(b.need(S))sum+=b.c(S)});
+ const pct=Math.round(sum/max*100);
+ const lv=pct<30?['Faible','#1E9E6A','Explore now','expérimentable dès maintenant, 0–6 mois']:pct<60?['Moyenne','#E08A00','Secure first','briques de confiance à construire d’abord, 6–12 mois']:['Élevée','#D4372C','Incubate','dépend de standards de place en cours, 12–24 mois'];
+ $('cplx').innerHTML='<span style="color:'+lv[1]+'">'+lv[0]+'</span>';
+ $('bar').style.width=Math.max(pct,5)+'%';$('bar').style.background=lv[1];
+ $('hz').innerHTML='<span class="tag" style="background:'+lv[1]+'22;color:'+lv[1]+'">'+lv[2]+'</span> &nbsp;Horizon indicatif : '+lv[3];
+ const nb=BL[u].filter(b=>b.need(S)).length,nc=BL[u].filter(b=>b.need(S)&&b.o=='caps').length;
+ $('key').innerHTML=(u=='pay'
+  ?(S.l==3?'⚠️ <b>Point dur :</b> payer client absent suppose de prouver un mandat donné à l’avance. Les standards de place (EMVCo, AP2, Visa, Mastercard) sont encore en construction.':S.l==2?'💡 <b>Bon compromis :</b> l’agent fait le travail, le client garde la décision. Mais il faut déjà savoir reconnaître l’agent et lui donner un moyen de paiement dédié.':'💡 <b>Point de départ :</b> aucune brique de paiement nouvelle, mais une valeur limitée.')
+  :(S.l==3?'💡 <b>À retenir :</b> l’autonomie est acceptable parce que l’action est protectrice et réversible. C’est l’inverse du paiement.':'💡 <b>À retenir :</b> les capacités existent largement ; il s’agit surtout de les exposer proprement à un agent.'))
+  +'<br><span style="color:#333">'+nb+' brique(s) requise(s) à ce niveau, dont '+nc+' pilotée(s) par CAPS.</span>';
+}
+const wait=ms=>new Promise(z=>setTimeout(z,ms));
+async function run(){
+ busy=true;$('run').disabled=true;used={};const [L,r]=scen();
+ $('tl').innerHTML='';$('res').className='res';drawBlocks();
+ let i=0;
+ for(const x of L){i++;const a=AV[x[0]],bs=x[3];
+  const chips=bs.length?'<div class="chips">'+bs.map(b=>'<span class="chip">'+NAME[b]+'</span>').join('')+'</div>':'<div class="nochip">Aucune brique nouvelle mobilisée</div>';
+  $('tl').insertAdjacentHTML('beforeend',`<div class="step"><div class="sn">${i}</div><div class="av">${a[0]}</div><div class="bub ${x[2]}"><small>${a[1]}</small>${x[1]}${chips}</div></div>`);
+  bs.forEach(b=>{(used[b]=used[b]||[]).push(i)});
+  const e=$('tl').lastElementChild;await wait(60);e.classList.add('show');
+  drawBlocks(bs);
+  await wait(bs.length?1500:900);
+ }
+ drawBlocks([],true);
+ $('res').className='res '+r[0];$('res').innerHTML='<b>'+r[1]+'</b>'+r[2];busy=false;$('run').disabled=false;
+}
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{if(busy)return;document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');u=b.dataset.u;load();});
+$('run').onclick=run;load();
+</script>
+</body>
+</html>
